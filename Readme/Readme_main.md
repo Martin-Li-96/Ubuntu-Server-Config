@@ -22,7 +22,7 @@
            After configuring the 00-installer-config.yaml is shown in the following figure.
            ![avatar](ethernet.png)
            Where addresses are the static IP addresses you will use, and use routes to set the gateway. The metric property is used to set the priority of the network device, the bigger number means low priority, and vice versa. In this condition, we set a bigger number of metric than the WiFi device.
-    - Set Wi-Fi for internet
+       - Set Wi-Fi for internet
              ![avatar](wifi.png)   
          Changing wlx00e04c870000 to your wifi device name.
          ```bash
@@ -30,10 +30,10 @@
              [Your Wifi Name]:
                  password: XXXX
          ```
-     - After all editing, Run:
-         ```bash
-         sudo netplan apply
-         ```
+        - After all editing, Run:
+            ```bash
+            sudo netplan apply
+            ```
 
   4. Install & Configure k8s
     
