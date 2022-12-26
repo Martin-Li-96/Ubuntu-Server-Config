@@ -34,14 +34,43 @@
             ```bash
             sudo netplan apply
             ```
-
-  4. Install & Configure k8s
+  4. LVM extend storage (Optionanl) 
     
+  5. Install & Configure k8s
+      - Install docker
+      ```bash
+        sudo apt install docker.io
+        sudo systemctl enable docker
+        sudo systemctl start docker
+        sudo systemctl status docker
+        #sudo systemctl start docker
+      ```  
+      - Install Kubernetes
+        (Note: The newest version of Kubernets may support **swap**, if you don't want to use swap-run "sudo swapoff –a")
+        ```bash
+        sudo apt-get update
+        sudo apt-get install -y apt-transport-https ca-certificates curl
+        sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        sudo apt-get update
+        sudo apt-get install -y kubelet kubeadm kubectl
+        sudo apt-mark hold kubelet kubeadm kubectl
+        ```
+     - Set Hostname
+        ```bash
+        #Master Node
+        sudo hostnamectl set-hostname master-node
+        #Work node
+        sudo hostnamectl set-hostname w1
+        ```
+     - Initialize Kubernetes on Master Node
+       ```bash
+       sudo kubeadm init --pod-network-cidr=169.254.208.33/16
+       #Set your own IP addresses 
+       ```
 
     
+Reference: 
 
-        
-
-   
-
-
+1. https://www.letscloud.io/community/how-to-install-kubernetesk8s-and-docker-on-ubuntu-2004
+2. https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
