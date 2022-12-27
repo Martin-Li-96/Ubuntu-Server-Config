@@ -46,8 +46,13 @@
         #sudo systemctl start docker
       ```  
       - Install Kubernetes
-        (Note: The newest version of Kubernets may support **swap**, if you don't want to use swap-run "sudo swapoff –a")
+        
         ```bash
+        #Disable the SWAP partition
+        sudo swapoff -a
+        sudo rm /swap.img
+        #edit /etc/fstab -> delete /swap.img none swap sw 0 0
+    
         sudo apt-get update
         sudo apt-get install -y apt-transport-https ca-certificates curl
         sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
@@ -60,9 +65,18 @@
         ```bash
         #Master Node
         sudo hostnamectl set-hostname master-node
+        #edit /etc/hosts
+        ip_adress master-node
         #Work node
         sudo hostnamectl set-hostname w1
         ```
+
+     - Install Containerd Follow the [link](https://github.com/containerd/containerd/edit/main/docs/getting-started.md)
+       **Note** On ubuntu, the containerd.service will be placed under /lib/systemd/system
+     - Disable the UFW for ubuntu's firewalld
+        ```bash
+        sudo systemctl stop ufw
+        ``` 
      - Initialize Kubernetes on Master Node
        ```bash
        sudo kubeadm init --pod-network-cidr=169.254.208.33/16
