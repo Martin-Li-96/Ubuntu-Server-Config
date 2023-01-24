@@ -37,14 +37,53 @@
   4. LVM extend storage (Optionanl) 
     
   5. Install & Configure k8s
-      - Install docker
-      ```bash
-        sudo apt install docker.io
-        sudo systemctl enable docker
-        sudo systemctl start docker
-        sudo systemctl status docker
-        #sudo systemctl start docker
-      ```  
+      - Install docker [link](https://docs.docker.com/engine/install/debian/)
+        ```bash
+          sudo apt-get remove docker docker-engine docker.io containerd runc
+          
+          sudo apt-get update
+          sudo apt-get install \ 
+              ca-certificates \
+              curl \
+              gnupg \
+              lsb-release
+
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+          echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+          $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          sudo apt-get update
+
+          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+          sudo systemctl enable docker
+          sudo systemctl start docker
+          sudo systemctl status docker       
+        ```  
+      - Install cri-dockerd  **(Run these commands as root)** [link](https://github.com/Mirantis/cri-dockerd)
+        ```bash
+          git clone https://github.com/Mirantis/cri-dockerd.git
+
+          wget https://storage.googleapis.com/golang/getgo/installer_linux
+          chmod +x ./installer_linux
+          ./installer_linux
+          source ~/.bash_profile
+
+          cd cri-dockerd
+          mkdir bin
+          go build -o bin/cri-dockerd
+          mkdir -p /usr/local/bin
+          install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+          cp -a packaging/systemd/* /etc/systemd/system
+          sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+          systemctl daemon-reload
+          systemctl enable cri-docker.service
+          systemctl enable --now cri-docker.socket
+
+        ``` 
       - Install Kubernetes
         
         ```bash
@@ -70,18 +109,38 @@
         #Work node
         sudo hostnamectl set-hostname w1
         ```
-
-     - Install Containerd Follow the [link](https://github.com/containerd/containerd/edit/main/docs/getting-started.md)
-       **Note** On ubuntu, the containerd.service will be placed under /lib/systemd/system
      - Disable the UFW for ubuntu's firewalld
         ```bash
         sudo systemctl stop ufw
         ``` 
      - Initialize Kubernetes on Master Node
        ```bash
-       sudo kubeadm init --pod-network-cidr=169.254.208.33/16
+       sudo kubeadm init --pod-network-cidr=192.168.2.2/24
        #Set your own IP addresses 
+
+       #Run as root
+       #vi .bashrch or /etc/profile
+       export KUBECONFIG=/etc/kubernetes/admin.conf
+       #please note if you edit /etc/profile you'd better add "source /etc/profile" to your .bashrc
        ```
+     - Choosing Network for k8s
+        https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+        In this condition, we choose flannel
+
+    - Add worker node to master node
+      
+      ```bash
+      #Run on master node and copy the join info
+      kubeadm token create --print-join-command
+      #Run on worker node
+      #past the join info
+      ```
+    - Option: edit label of worker node
+      ```bash 
+        kubectl label node nuc11-server node-role.kubernetes.io/work=worker 
+      ```  
+       
 
     
 Reference: 
