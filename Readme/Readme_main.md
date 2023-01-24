@@ -140,6 +140,9 @@
       ```bash 
         kubectl label node nuc11-server node-role.kubernetes.io/work=worker 
       ```  
+- NUC11 Server with gpu
+  The config is the same as HP server, but don't exec kubectl init, but run add worker node  command
+
        
 
     
