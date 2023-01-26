@@ -37,7 +37,7 @@
   4. LVM extend storage (Optionanl) 
     
   5. Install & Configure k8s
-      - Install docker [link](https://docs.docker.com/engine/install/debian/)
+      - Install docker [link](https://docs.docker.com/engine/install/ubuntu/)
         ```bash
           sudo apt-get remove docker docker-engine docker.io containerd runc
           
