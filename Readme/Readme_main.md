@@ -114,15 +114,16 @@
         sudo systemctl stop ufw
         ``` 
      - Initialize Kubernetes on Master Node
-       ```bash
-       sudo kubeadm init --pod-network-cidr=192.168.2.2/24
-       #Set your own IP addresses 
+        ```bash
+        sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.2.2
 
-       #Run as root
-       #vi .bashrch or /etc/profile
-       export KUBECONFIG=/etc/kubernetes/admin.conf
-       #please note if you edit /etc/profile you'd better add "source /etc/profile" to your .bashrc
-       ```
+        #Set your own IP addresses 
+
+        #Run as root
+        #vi .bashrch or /etc/profile
+        export KUBECONFIG=/etc/kubernetes/admin.conf
+        #please note if you edit /etc/profile you'd better add "source /etc/profile" to your .bashrc
+        ```
      - Choosing Network for k8s
         https://kubernetes.io/docs/concepts/cluster-administration/addons/
 
