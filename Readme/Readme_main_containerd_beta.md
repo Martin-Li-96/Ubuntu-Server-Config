@@ -114,17 +114,15 @@
         sudo systemctl stop ufw
         ``` 
      - Initialize Kubernetes on Master Node
-        ```bash
-        #If you use flannel network plugin, the --pod-network-cidr=10.244.0.0/16 must be set
-        sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.2.2
+       ```bash
+       sudo kubeadm init --apiserver-advertise-address=192.168.2.2/24
+       #Set your own IP addresses 
 
-        #Set your own IP addresses 
-
-        #Run as root
-        #vi .bashrch or /etc/profile
-        export KUBECONFIG=/etc/kubernetes/admin.conf
-        #please note if you edit /etc/profile you'd better add "source /etc/profile" to your .bashrc
-        ```
+       #Run as root
+       #vi .bashrch or /etc/profile
+       export KUBECONFIG=/etc/kubernetes/admin.conf
+       #please note if you edit /etc/profile you'd better add "source /etc/profile" to your .bashrc
+       ```
      - Choosing Network for k8s
         https://kubernetes.io/docs/concepts/cluster-administration/addons/
 
@@ -152,3 +150,4 @@ Reference:
 
 1. https://www.letscloud.io/community/how-to-install-kubernetesk8s-and-docker-on-ubuntu-2004
 2. https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+3. https://www.hostafrica.ng/blog/kubernetes/kubernetes-ubuntu-20-containerd/
